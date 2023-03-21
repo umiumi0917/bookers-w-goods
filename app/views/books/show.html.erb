@@ -16,11 +16,44 @@
                 <% end %></td>
           <td><%= link_to @book.title, book_path(@book) %></td>
           <td><%= @book.body %></td>
+          <td><% if @book.favorited_by?(current_user) %>
+    <p>
+      <%= link_to book_favorites_path(@book), method: :delete do %>
+        <i class="fas fa-heart"></i>
+        <%= @book.favorites.count %>
+      <% end %>
+    </p>
+    <% else %>
+    <p>
+      <%= link_to book_favorites_path(@book), method: :post do %>
+       <i class="far fa-heart" ></i>
+        <%= @book.favorites.count %>
+      <% end %>
+    </p>
+  <% end %></td>
+          <td> <p>コメント件数：<%= @book.book_comments.count %></p></td>
           <% if @book.user_id == current_user.id %>
             <td><%= link_to "Edit", edit_book_path(@book), class:"btn btn-sm btn-success edit_book_68610"%></td>
             <td><%= link_to "Destroy", book_path(@book), method: :delete, data: {confirm: "Delete???"}, class:"btn btn-sm btn-danger destroy_book_68610" %></td>
           <% end %>
+        </tr>
+        <% @book.book_comments.each do |book_comment| %>
+        <tr>
+            <td><%= image_tag book_comment.user.get_profile_image(50,50) %><br><%= book_comment.user.name %></td>
+            <td><%= book_comment.comment %></td>
+            <td><%= book_comment.created_at.strftime('%Y/%m/%d') %></td>
+          <% if book_comment.user == current_user %>
+            <td><%= link_to "Destroy", book_book_comment_path(book_comment.book, book_comment), method: :delete %></td>
+          <% end %>
+          <% end %>
         </tr></tbody>
       </table>
+      <%= form_with model: [@book, @book_comment] do |f| %>
+           <div class="form-group">
+             <%= f.text_area :comment,class:"form-control comment" %>
+             <%= f.submit "送信",class:"btn btn-success" %>
+           </div>
+           <% end %>
     </div>
+
 
