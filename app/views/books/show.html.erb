@@ -1,27 +1,26 @@
-<div class= "col-xs-3">
-   <%= render 'users/userinfo', user: @user %>
-   <%= render 'new', book: @book %>
-</div>
+   <main>
+      <%= render 'books/error', model: @book %>
+        <p id="notice"></p>
+        <div class="container px-5 px-sm-0">
+          <%= render 'users/userinfo', user: @user %>
+          <%= render 'books/new', book: @book_new %>
+    </div>
 
-<div class= "col-xs-9">
-    <h2>Book detail</h2>
-    <table class='table' >
-    <tr>
-    <td>
-      <%= link_to user_path(@book.user_id) do %>
-        <%= attachment_image_tag @book.user, :profile_image, :fill, 50, 50, fallback: "no_image.jpg",size:'50x50',format: 'no_image.jpg' %>
-         <nav>
-           <%= @book.user.name %>
-         </nav>
-       <% end %>
-    </td>
+    <div class="col-md-8 offset-md-1">
+      <h2>Book detail</h2>
+      <table class="table">
+        <tbody><tr>
+          <td><%= link_to user_path(@book.user) do %>
+                  <%= image_tag @user.get_profile_image(100,100) %><br>
+                  <%= @user.name %>
+                <% end %></td>
+          <td><%= link_to @book.title, book_path(@book) %></td>
+          <td><%= @book.body %></td>
+          <% if @book.user_id == current_user.id %>
+            <td><%= link_to "Edit", edit_book_path(@book), class:"btn btn-sm btn-success edit_book_68610"%></td>
+            <td><%= link_to "Destroy", book_path(@book), method: :delete, data: {confirm: "Delete???"}, class:"btn btn-sm btn-danger destroy_book_68610" %></td>
+          <% end %>
+        </tr></tbody>
+      </table>
+    </div>
 
-    <td><%= link_to @book.title %></td>
-    <td><%= @book.body %></td>
-    <% if @book.user_id == current_user.id %>
-    <td><%= link_to"edit", edit_book_path(@book.id),class:"btn-sm btn-success" %></td>
-    <td><%= link_to "destroy", book_path(@book.id), class:"btn-sm btn-danger destroy(@book.id)", method: :delete,data: {confirm: "Really?"} %></td>
-    <% end %>
-    </tr>
-    </table>
-</div>
